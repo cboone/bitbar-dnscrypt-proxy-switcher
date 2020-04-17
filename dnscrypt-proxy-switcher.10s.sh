@@ -11,7 +11,7 @@
 # <bitbar.version>v0.1</bitbar.version>
 
 # Non-authenticated resolver IP addresses
-ADDITIONAL_IPS="9.9.9.9 149.112.112.112 2620:fe::fe 2620:fe::9"
+ADDITIONAL_IPS="149.112.112.112 2620:fe::9 2620:fe::fe 9.9.9.9"
 
 # Name of the non-authenticated resolver
 ADDITIONAL_NAME="Quad9"
@@ -129,11 +129,12 @@ flush_dns_cache() {
 display_name_for_resolvers() {
 	resolvers="$1"
 	case "$resolvers" in
-	"$DNSCRYPT_PROXY_IPS") echo "${DNSCRYPT_NAME}" ;;
+	"${DNSCRYPT_PROXY_IPS}") echo "${DNSCRYPT_NAME}" ;;
 	"${DNSCRYPT_PROXY_IPS} ${ADDITIONAL_IPS}") echo "${DNSCRYPT_NAME} + ${ADDITIONAL_NAME}" ;;
-	"$ADDITIONAL_IPS") echo "$ADDITIONAL_NAME" ;;
+	"${ADDITIONAL_IPS}") echo "$ADDITIONAL_NAME" ;;
 	^$ | There*) echo "default" ;;
-	*) echo "$resolvers" ;;
+	# *) echo "$resolvers" ;;
+	*) echo "not found" ;;
 	esac
 }
 
@@ -172,7 +173,9 @@ echo "---"
 # 	echo "Wi-Fi SSID: ${ssid}"
 # fi
 
-echo "Current ${service} resolver: ${service_resolvers_name}"
+echo "Current ${service} resolvers"
+echo "    ${service_resolvers_name} | trim=false"
+echo "    ${current_resolvers} | trim=false"
 if [ "$service_resolvers_name" != "$current_resolvers_name" ]; then
 	echo "Current resolver: ${current_resolvers_name} | color=red"
 fi
